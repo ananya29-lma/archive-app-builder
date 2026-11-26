@@ -142,30 +142,34 @@ const awards = [
 const hash = (i: number, salt: number) =>
   ((Math.imul(i + 1, 2654435761) ^ Math.imul(salt + 7, 40503)) >>> 0) % 1000 / 1000;
 
+// Narrow shafts fanning out from the corner, like light through a gap
 const ventureRays = [
-  { w: "34vh", a: "-15deg", b: "20px", dur: "11s", delay: "-2s" },
-  { w: "16vh", a: "-8deg", b: "12px", dur: "8s", delay: "-5s" },
-  { w: "44vh", a: "0deg", b: "18px", dur: "10s", delay: "0s" },
-  { w: "12vh", a: "5deg", b: "9px", dur: "7s", delay: "-3s" },
-  { w: "26vh", a: "11deg", b: "16px", dur: "12s", delay: "-7s" },
-  { w: "10vh", a: "17deg", b: "12px", dur: "9s", delay: "-1s" },
+  { w: "30vh", a: "-19deg", b: "20px", dur: "11s", delay: "-2s" },
+  { w: "13vh", a: "-11deg", b: "10px", dur: "8s", delay: "-5s" },
+  { w: "22vh", a: "-4deg", b: "14px", dur: "10s", delay: "0s" },
+  { w: "9vh", a: "2deg", b: "8px", dur: "7s", delay: "-3s" },
+  { w: "18vh", a: "8deg", b: "12px", dur: "12s", delay: "-7s" },
+  { w: "8vh", a: "14deg", b: "8px", dur: "9s", delay: "-1s" },
+  { w: "14vh", a: "20deg", b: "14px", dur: "13s", delay: "-4s" },
 ];
 
-// Particles sit inside the rotated cone: `d` is distance down the beam, spread widens with it
-const ventureSparks = Array.from({ length: 110 }, (_, i) => {
+// Particles sit inside the rotated cone: `d` is distance down the beam, spread widens with it.
+// Fine dust hugs the centre shaft; larger soft bokeh scatters wide and far.
+const ventureSparks = Array.from({ length: 270 }, (_, i) => {
   const bokeh = i % 3 === 0;
-  const d = 0.1 + 0.85 * Math.sqrt(hash(i, 1));
-  const lateral = (hash(i, 2) - 0.5) * (bokeh ? 95 : 60) * d;
+  const d = bokeh ? 0.18 + 0.6 * Math.sqrt(hash(i, 1)) : 0.1 + 0.68 * hash(i, 1);
+  const centred = (hash(i, 2) + hash(i, 9) + hash(i, 10)) / 3 - 0.5;
+  const lateral = bokeh ? (hash(i, 2) - 0.5) * 150 * d : centred * 110 * d;
   return {
     bokeh,
     left: Math.round((50 + lateral) * 10) / 10,
     top: Math.round(d * 1000) / 10,
-    size: bokeh ? 4 + Math.round(hash(i, 3) * 9) : 1 + Math.round(hash(i, 3) * 1.5),
-    blur: bokeh && hash(i, 4) > 0.6 ? 2 : 0,
-    o: Math.round((0.35 + hash(i, 5) * 0.65) * 100) / 100,
+    size: bokeh ? 4 + Math.round(hash(i, 3) * 10) : 1.5 + Math.round(hash(i, 3) * 3) / 2,
+    blur: bokeh && hash(i, 4) > 0.65 ? 2 : 0,
+    o: Math.round((bokeh ? 0.5 + hash(i, 5) * 0.5 : 0.6 + hash(i, 5) * 0.4) * 100) / 100,
     sx: Math.round((hash(i, 6) - 0.5) * 30) / 10,
-    delay: -Math.round(hash(i, 7) * 120) / 10,
-    dur: 6 + Math.round(hash(i, 8) * 8),
+    delay: -Math.round(hash(i, 7) * 140) / 10,
+    dur: 7 + Math.round(hash(i, 8) * 8),
   };
 });
 
