@@ -61,6 +61,7 @@ export function Work() {
   const carouselRef = useRef<WarpCarouselHandle>(null);
   const barRef = useRef<HTMLDivElement | null>(null);
   const [hovered, setHovered] = useState<number | null>(null);
+  const [front, setFront] = useState<number | null>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
@@ -147,7 +148,7 @@ export function Work() {
               <WorkGlassCard
                 key={project.name}
                 project={project}
-                isHighlighted={hovered === index}
+                isHighlighted={hovered === index || front === index}
                 onHoverChange={(on) =>
                   setHovered((prev) => (on ? index : prev === index ? null : prev))
                 }
@@ -185,12 +186,12 @@ export function Work() {
           </div>
 
           <div className="relative z-10 h-full w-full">
-            <WarpCarousel ref={carouselRef} ariaLabel="Specializations">
+            <WarpCarousel ref={carouselRef} ariaLabel="Specializations" onFrontChange={setFront}>
               {projects.map((project, index) => (
                   <WorkGlassCard
                     key={project.name}
                     project={project}
-                    isHighlighted={hovered === index}
+                    isHighlighted={hovered === index || front === index}
                     onHoverChange={(on) =>
                       setHovered((prev) => (on ? index : prev === index ? null : prev))
                     }
