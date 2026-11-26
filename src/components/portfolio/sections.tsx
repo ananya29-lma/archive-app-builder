@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { Mail } from "lucide-react";
 import { ScrollRevealParagraph } from "./scroll-reveal-paragraph";
 import serviceFlash from "@/assets/service-flash.jpg";
@@ -138,14 +138,36 @@ const awards = [
   },
 ];
 
-// Deterministic spark layout (no randomness, keeps SSR and browser in sync)
-const ventureSparks = Array.from({ length: 34 }, (_, i) => ({
-  r: (i * 37) % 28,
-  t: -10 + ((i * 53) % 30),
-  s: 1.5 + ((i * 7) % 3),
-  d: -((i * 1.3) % 9),
-  dur: 6 + ((i * 11) % 6),
-}));
+// Deterministic layout (integer hash, no randomness — keeps SSR and browser in sync)
+const hash = (i: number, salt: number) =>
+  ((Math.imul(i + 1, 2654435761) ^ Math.imul(salt + 7, 40503)) >>> 0) % 1000 / 1000;
+
+const ventureRays = [
+  { w: "34vh", a: "-15deg", b: "20px", dur: "11s", delay: "-2s" },
+  { w: "16vh", a: "-8deg", b: "12px", dur: "8s", delay: "-5s" },
+  { w: "44vh", a: "0deg", b: "18px", dur: "10s", delay: "0s" },
+  { w: "12vh", a: "5deg", b: "9px", dur: "7s", delay: "-3s" },
+  { w: "26vh", a: "11deg", b: "16px", dur: "12s", delay: "-7s" },
+  { w: "10vh", a: "17deg", b: "12px", dur: "9s", delay: "-1s" },
+];
+
+// Particles sit inside the rotated cone: `d` is distance down the beam, spread widens with it
+const ventureSparks = Array.from({ length: 170 }, (_, i) => {
+  const bokeh = i % 3 === 0;
+  const d = 0.1 + 0.85 * Math.sqrt(hash(i, 1));
+  const lateral = (hash(i, 2) - 0.5) * (bokeh ? 95 : 60) * d;
+  return {
+    bokeh,
+    left: Math.round((50 + lateral) * 10) / 10,
+    top: Math.round(d * 1000) / 10,
+    size: bokeh ? 4 + Math.round(hash(i, 3) * 9) : 1 + Math.round(hash(i, 3) * 1.5),
+    blur: bokeh && hash(i, 4) > 0.6 ? 2 : 0,
+    o: Math.round((0.35 + hash(i, 5) * 0.65) * 100) / 100,
+    sx: Math.round((hash(i, 6) - 0.5) * 30) / 10,
+    delay: -Math.round(hash(i, 7) * 120) / 10,
+    dur: 6 + Math.round(hash(i, 8) * 8),
+  };
+});
 
 export function Awards() {
   const wrapRef = useRef<HTMLDivElement | null>(null);
@@ -208,24 +230,42 @@ export function Awards() {
         <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
           <div className="venture-light" aria-hidden="true">
             <div className="venture-light__glow" />
-            <div className="venture-light__ray" />
-            <div className="venture-light__ray" />
-            <div className="venture-light__ray" />
-            <div className="venture-light__ray" />
-            {ventureSparks.map((sp, i) => (
-              <span
-                key={i}
-                className="venture-spark"
-                style={{
-                  right: `${sp.r}%`,
-                  top: `${sp.t}%`,
-                  width: sp.s,
-                  height: sp.s,
-                  animationDelay: `${sp.d}s`,
-                  animationDuration: `${sp.dur}s`,
-                }}
-              />
-            ))}
+            <div className="venture-light__cone">
+              {ventureRays.map((r, i) => (
+                <div
+                  key={i}
+                  className="venture-light__ray"
+                  style={
+                    {
+                      "--w": r.w,
+                      "--a": r.a,
+                      "--b": r.b,
+                      "--dur": r.dur,
+                      "--delay": r.delay,
+                    } as CSSProperties
+                  }
+                />
+              ))}
+              {ventureSparks.map((sp, i) => (
+                <span
+                  key={i}
+                  className={sp.bokeh ? "venture-spark" : "venture-spark venture-spark--dust"}
+                  style={
+                    {
+                      left: `${sp.left}%`,
+                      top: `${sp.top}%`,
+                      width: sp.size,
+                      height: sp.size,
+                      filter: sp.blur ? `blur(${sp.blur}px)` : undefined,
+                      "--o": sp.o,
+                      "--sx": `${sp.sx}rem`,
+                      animationDelay: `${sp.delay}s`,
+                      animationDuration: `${sp.dur}s`,
+                    } as CSSProperties
+                  }
+                />
+              ))}
+            </div>
           </div>
           <div className="relative z-10 mx-auto w-full max-w-6xl px-6">
             <SectionTitle light="MY " bold="VENTURES" eyebrow="" />

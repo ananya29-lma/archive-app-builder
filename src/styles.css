@@ -729,39 +729,53 @@
 }
 @media (prefers-reduced-motion: reduce) { .experience-zoom { animation: none; } }
 
-/* Ventures: golden light beam falling from the top-right corner */
+/* Ventures: golden light beams fanning from the top-right corner with drifting gold dust */
+.venture-gold-bg { background: radial-gradient(ellipse at 100% 0%, #241a0a 0%, #0d0a05 38%, #050403 100%); }
 .venture-light { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
 .venture-light__glow {
-  position: absolute; top: -30vw; right: -22vw; width: 55vw; height: 55vw; border-radius: 9999px;
-  background: radial-gradient(circle, rgba(240,196,110,0.6) 0%, rgba(201,150,62,0.16) 35%, transparent 70%);
-  filter: blur(20px); animation: ventureGlow 7s ease-in-out infinite;
+  position: absolute; top: -28vw; right: -24vw; width: 56vw; height: 56vw; border-radius: 9999px;
+  background: radial-gradient(circle, rgba(246,208,128,0.75) 0%, rgba(201,150,62,0.2) 38%, transparent 70%);
+  filter: blur(24px); animation: ventureGlow 7s ease-in-out infinite;
+}
+/* Rotated cone anchored on the corner: beams and dust live in its coordinate space */
+.venture-light__cone {
+  position: absolute; top: -6vh; right: -60vh; width: 120vh; height: 230vh;
+  transform-origin: top center; rotate: 43deg;
 }
 .venture-light__ray {
-  position: absolute; top: -30%; right: 4%; height: 150%; transform-origin: top center;
-  background: linear-gradient(to bottom, rgba(246,210,140,0.8), rgba(201,150,62,0.2) 55%, transparent 85%);
-  filter: blur(14px); mix-blend-mode: screen; animation: ventureRay 9s ease-in-out infinite;
+  position: absolute; top: 0; left: 50%; height: 100%;
+  width: var(--w); margin-left: calc(var(--w) / -2);
+  transform-origin: top center; rotate: var(--a);
+  filter: blur(var(--b, 16px)); mix-blend-mode: screen;
+  animation: ventureRay var(--dur, 9s) ease-in-out var(--delay, 0s) infinite;
 }
-.venture-light__ray:nth-child(2) { width: 9rem; rotate: 38deg; animation-delay: 0s; }
-.venture-light__ray:nth-child(3) { width: 4rem; rotate: 46deg; right: 10%; animation-delay: -3s; animation-duration: 11s; }
-.venture-light__ray:nth-child(4) { width: 6rem; rotate: 30deg; right: -2%; animation-delay: -6s; animation-duration: 8s; }
-.venture-light__ray:nth-child(5) { width: 2.5rem; rotate: 54deg; right: 16%; animation-delay: -1.5s; animation-duration: 12s; }
+/* Shape lives on the pseudo-element so the parent's blur softens the cone edges */
+.venture-light__ray::before {
+  content: ""; position: absolute; inset: 0;
+  clip-path: polygon(47% 0, 53% 0, 100% 100%, 0 100%);
+  background: linear-gradient(to bottom, rgba(250,216,146,0.8) 0%, rgba(214,164,78,0.4) 28%, rgba(180,130,50,0.14) 60%, transparent 90%);
+}
 @keyframes ventureRay {
-  0%, 100% { opacity: 0.35; transform: translateX(0) scaleY(0.92); }
-  50% { opacity: 0.9; transform: translateX(-2.5rem) scaleY(1.05); }
+  0%, 100% { opacity: 0.3; scale: 0.94 1; }
+  50% { opacity: 0.8; scale: 1.08 1; }
 }
 @keyframes ventureGlow { 0%, 100% { opacity: 0.6; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.06); } }
-@media (prefers-reduced-motion: reduce) { .venture-light__ray, .venture-light__glow { animation: none; } }
 
-.venture-gold-bg { background: radial-gradient(ellipse at 85% 0%, #2a1f0e 0%, #120e08 45%, #0a0806 100%); }
 .venture-spark {
-  position: absolute; border-radius: 9999px; background: #ffe2a3;
-  box-shadow: 0 0 6px 1px rgba(255,205,120,0.8); opacity: 0;
-  animation: ventureSpark 8s linear infinite;
+  position: absolute; border-radius: 9999px; opacity: 0;
+  background: radial-gradient(circle, #fff1c9 0%, #f3c877 55%, rgba(243,200,119,0) 100%);
+  box-shadow: 0 0 8px 1px rgba(255,205,120,0.55);
+  animation: ventureSpark 9s linear infinite;
 }
+.venture-spark--dust { background: #ffe6ad; box-shadow: 0 0 3px rgba(255,214,140,0.7); }
 @keyframes ventureSpark {
   0% { opacity: 0; transform: translate(0, 0); }
-  15% { opacity: 1; }
-  70% { opacity: 0.7; }
-  100% { opacity: 0; transform: translate(-38vw, 70vh); }
+  18% { opacity: var(--o, 1); }
+  45% { opacity: calc(var(--o, 1) * 0.45); transform: translate(var(--sx, 0.6rem), 5vh); }
+  72% { opacity: var(--o, 1); }
+  100% { opacity: 0; transform: translate(calc(var(--sx, 0.6rem) * -1), 12vh); }
 }
-@media (prefers-reduced-motion: reduce) { .venture-spark { animation: none; opacity: 0.6; } }
+@media (prefers-reduced-motion: reduce) {
+  .venture-light__ray, .venture-light__glow { animation: none; opacity: 0.7; }
+  .venture-spark { animation: none; opacity: calc(var(--o, 1) * 0.7); }
+}
