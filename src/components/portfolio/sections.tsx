@@ -284,7 +284,7 @@ export function Awards() {
                   }}
                   className="flex w-[78vw] shrink-0 will-change-transform sm:w-[52vw] md:w-[22rem]"
                 >
-                  <article className="group flex h-full w-full flex-col overflow-hidden rounded-3xl border border-border bg-card transition-all duration-500 hover:-translate-y-1 hover:border-accent/60">
+                  <article className="group flex h-full w-full flex-col overflow-hidden rounded-3xl border border-border bg-card transition-all duration-500 hover:-translate-y-1 hover:border-highlight/70 hover:shadow-[0_0_32px_-8px_var(--highlight)]">
                     <div className="relative h-44 shrink-0 overflow-hidden">
                       <img
                         src={a.image}
