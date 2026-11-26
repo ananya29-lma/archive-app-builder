@@ -152,7 +152,7 @@ const ventureRays = [
 ];
 
 // Particles sit inside the rotated cone: `d` is distance down the beam, spread widens with it
-const ventureSparks = Array.from({ length: 170 }, (_, i) => {
+const ventureSparks = Array.from({ length: 110 }, (_, i) => {
   const bokeh = i % 3 === 0;
   const d = 0.1 + 0.85 * Math.sqrt(hash(i, 1));
   const lateral = (hash(i, 2) - 0.5) * (bokeh ? 95 : 60) * d;

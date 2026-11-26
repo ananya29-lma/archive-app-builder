@@ -734,7 +734,7 @@
 .venture-light { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
 .venture-light__glow {
   position: absolute; top: -28vw; right: -24vw; width: 56vw; height: 56vw; border-radius: 9999px;
-  background: radial-gradient(circle, rgba(246,208,128,0.75) 0%, rgba(201,150,62,0.2) 38%, transparent 70%);
+  background: radial-gradient(circle, rgba(246,208,128,0.4) 0%, rgba(201,150,62,0.1) 38%, transparent 70%);
   filter: blur(24px); animation: ventureGlow 7s ease-in-out infinite;
 }
 /* Rotated cone anchored on the corner: beams and dust live in its coordinate space */
@@ -753,11 +753,11 @@
 .venture-light__ray::before {
   content: ""; position: absolute; inset: 0;
   clip-path: polygon(47% 0, 53% 0, 100% 100%, 0 100%);
-  background: linear-gradient(to bottom, rgba(250,216,146,0.8) 0%, rgba(214,164,78,0.4) 28%, rgba(180,130,50,0.14) 60%, transparent 90%);
+  background: linear-gradient(to bottom, rgba(250,216,146,0.5) 0%, rgba(214,164,78,0.24) 28%, rgba(180,130,50,0.08) 60%, transparent 90%);
 }
 @keyframes ventureRay {
-  0%, 100% { opacity: 0.3; scale: 0.94 1; }
-  50% { opacity: 0.8; scale: 1.08 1; }
+  0%, 100% { opacity: 0.2; scale: 0.94 1; }
+  50% { opacity: 0.55; scale: 1.08 1; }
 }
 @keyframes ventureGlow { 0%, 100% { opacity: 0.6; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.06); } }
 
@@ -770,9 +770,9 @@
 .venture-spark--dust { background: #ffe6ad; box-shadow: 0 0 3px rgba(255,214,140,0.7); }
 @keyframes ventureSpark {
   0% { opacity: 0; transform: translate(0, 0); }
-  18% { opacity: var(--o, 1); }
-  45% { opacity: calc(var(--o, 1) * 0.45); transform: translate(var(--sx, 0.6rem), 5vh); }
-  72% { opacity: var(--o, 1); }
+  18% { opacity: calc(var(--o, 1) * 0.6); }
+  45% { opacity: calc(var(--o, 1) * 0.25); transform: translate(var(--sx, 0.6rem), 5vh); }
+  72% { opacity: calc(var(--o, 1) * 0.6); }
   100% { opacity: 0; transform: translate(calc(var(--sx, 0.6rem) * -1), 12vh); }
 }
 @media (prefers-reduced-motion: reduce) {
