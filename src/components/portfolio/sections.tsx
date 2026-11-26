@@ -288,19 +288,26 @@ export function Awards() {
                   }}
                   className="flex w-[78vw] shrink-0 will-change-transform sm:w-[52vw] md:w-[22rem]"
                 >
-                  <article className="group flex h-full w-full flex-col overflow-hidden rounded-3xl border border-border bg-card transition-all duration-500 hover:-translate-y-1 hover:border-highlight/70 hover:shadow-[0_0_32px_-8px_var(--highlight)]">
-                    <div className="relative h-44 shrink-0 overflow-hidden">
-                      <img
-                        src={a.image}
-                        alt={a.title}
-                        loading="lazy"
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                    </div>
-                    <div className="flex flex-1 flex-col p-6">
-                      <h3 className="text-xl font-semibold leading-snug">{a.title}</h3>
-                      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{a.desc}</p>
-                      <p className="mt-auto pt-6 text-xs uppercase tracking-[0.18em] text-highlight">{a.tags}</p>
+                  <article
+                    tabIndex={0}
+                    className="group relative h-[24rem] w-full overflow-hidden rounded-3xl border border-border bg-card outline-none transition-all duration-500 hover:-translate-y-1 hover:border-highlight/70 hover:shadow-[0_0_32px_-8px_var(--highlight)] focus-visible:border-highlight/70"
+                  >
+                    <img
+                      src={a.image}
+                      alt={a.title}
+                      loading="lazy"
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 group-focus-visible:scale-105"
+                    />
+                    <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-background via-background/70 to-transparent" />
+                    <div className="absolute inset-0 bg-background/80 opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-focus-visible:opacity-100" />
+                    <div className="absolute inset-0 flex flex-col justify-end p-6">
+                      <h3 className="text-xl font-semibold leading-snug text-foreground">{a.title}</h3>
+                      <div className="grid grid-rows-[0fr] opacity-0 transition-all duration-500 group-hover:grid-rows-[1fr] group-hover:opacity-100 group-focus-visible:grid-rows-[1fr] group-focus-visible:opacity-100">
+                        <div className="overflow-hidden">
+                          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{a.desc}</p>
+                          <p className="pt-5 text-xs uppercase tracking-[0.18em] text-highlight">{a.tags}</p>
+                        </div>
+                      </div>
                     </div>
                   </article>
                 </div>
